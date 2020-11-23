@@ -1,17 +1,5 @@
 # -*- coding: utf-8 -*-
-# Author: Ankush Gupta
-# Date: 2015
 
-"""
-Entry-point for generating synthetic text images, as described in:
-
-@InProceedings{Gupta16,
-      author       = "Gupta, A. and Vedaldi, A. and Zisserman, A.",
-      title        = "Synthetic Data for Text Localisation in Natural Images",
-      booktitle    = "IEEE Conference on Computer Vision and Pattern Recognition",
-      year         = "2016",
-    }
-"""
 import csv
 import numpy as np
 import h5py
@@ -126,16 +114,12 @@ def main(viz=False, worker=5):
         filtered_imnames = set(cp.load(f))
 
     # 分批多线程处理
-    # logger.info()
-    # print(imnames)
-    # print(worker)
     file_list_arr = np.array_split(imnames, worker)
     logger.info("线程数：%r,总文件数：%r", worker, len(imnames))
     p_no = 0
     pool = Pool(processes=worker)
 
     for file_list in file_list_arr:
-        # main(p_no, bg_path, file_list, origin_image_path, origin_json_path)
         time.sleep(2)
         pool.apply_async(generate_batch, args=(p_no, im_dir, file_list, output_path, viz))
         p_no += 1
@@ -143,10 +127,11 @@ def main(viz=False, worker=5):
     pool.join()
     logger.info("程序处理结束，全部生成完毕！")
 
-    # out_db.close()
-
 
 def generate_batch(p_no, im_dir, im_list, output_path, viz=False):
+    """
+    批量生成样本
+    """
     global depth_db, seg_db
     img_cnt = len(im_list)
     logger.info("进程：%r,处理文件数：", p_no, img_cnt)
@@ -158,9 +143,12 @@ def generate_batch(p_no, im_dir, im_list, output_path, viz=False):
         if not os.path.exists(img_p):
             logger.warning("文件：%r不存在，跳过", img_p)
             continue
-        # # ignore if not in filetered list:
-        # if im_name not in filtered_imnames:
-        #     continue
+        #
+        dname = "%s_%d" % (im_name, 0) + ".jpg"
+        check_path = os.path.join(output_path, "images", dname)
+        if os.path.exists(check_path):
+            logger.info("已经生成过了不再执行：%r", check_path)
+            continue
 
         t1 = time.time()
         try:
