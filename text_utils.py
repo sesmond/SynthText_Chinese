@@ -337,6 +337,7 @@ class RenderFont(object):
         in the mask -- 255 for unsafe, 0 for safe.
         The text is rendered using FONT, the text content is TEXT.
         """
+        print("使用字体", font)  # TODO 上移动
         # H,W = mask.shape
         H, W = self.robust_HW(mask)
         f_asp = self.font_state.get_aspect_ratio(font)
@@ -359,7 +360,6 @@ class RenderFont(object):
             f_h_px = self.sample_font_height_px(self.min_font_h, max_font_h)
             # print "font-height : %.2f (min: %.2f, max: %.2f)"%(f_h_px, self.min_font_h,max_font_h)
             # convert from pixel-height to font-point-size:
-            print("使用字体", font) #TODO 上移动
             f_h = self.font_state.get_font_size(font, f_h_px)
 
             # update for the loop

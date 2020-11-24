@@ -51,7 +51,7 @@ def add_more_data_into_dset(db_fname, more_img_file_path, more_depth_path, more_
 if __name__ == '__main__':
     # path to the data-file, containing image, depth and segmentation:
     db_fname = 'data/dset_test.h5'
-
+    # 往dset中添加新的预处理数据，其实没啥用，就是组装起来了。
     # add more data into the dset
     more_depth_path = "data/depth.h5"
     more_seg_path = '/seg.h5'
